@@ -1,0 +1,58 @@
+# XMotor Industrial OPS 产品配置
+product:
+  name: "XMotor Industrial OPS"
+  display_name: "XMotor 工业操作平台"
+  version: "1.0.0"
+  description: "工业抛光系统操作平台 - 实时监控与控制"
+  vendor: "XMotor Technology"
+  license: "Proprietary"
+  release_date: "2025-01-17"
+  
+components:
+  backend:
+    name: "XMotor Backend API"
+    version: "1.0.0"
+    description: "FastAPI 后端服务"
+    port: 8000
+    health_endpoint: "/api/health"
+    
+  frontend:
+    name: "XMotor Frontend UI"
+    version: "1.0.0"
+    description: "React 前端界面"
+    port: 80
+
+requirements:
+  os:
+    - "Windows 10 (64-bit)"
+    - "Windows 11 (64-bit)"
+    - "Windows Server 2019+"
+  docker:
+    name: "Docker Desktop"
+    version: "20.10.0+"
+    download_url: "https://www.docker.com/products/docker-desktop"
+  docker_compose:
+    version: "2.0.0+"
+  hardware:
+    cpu: "2 cores minimum"
+    memory: "4GB RAM minimum"
+    disk: "10GB free space minimum"
+
+features:
+  - "实时电机状态监控"
+  - "振动数据分析"
+  - "ModbusRTU 通信支持"
+  - "模拟数据模式"
+  - "控制参数设置"
+  - "历史数据图表"
+
+default_ports:
+  frontend: 80
+  backend: 8000
+
+default_paths:
+  install: "%ProgramFiles%\\XMotor-OPS"
+  data: "%ProgramData%\\XMotor-OPS"
+  logs: "%ProgramData%\\XMotor-OPS\\logs"
+  config: "%ProgramData%\\XMotor-OPS\\config"
+

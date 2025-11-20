@@ -1,0 +1,58 @@
+# 注意: version 字段已过时，但保留以兼容旧版本 Docker Compose
+# 如果看到警告，可以删除 version 行
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: xmotor-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      # 挂载日志目录（持久化日志）- Windows 路径
+      - ${XMOTOR_LOG_DIR:-./logs}:/app/logs
+      # Windows 串口访问（通过命名管道，需要特殊配置）
+      # 注意: Windows Docker Desktop 对串口支持有限
+      # 建议在宿主机上直接运行后端服务，或使用 WSL2
+    env_file:
+      # 从配置文件加载环境变量（如果存在）
+      - .env
+    environment:
+      # 环境变量配置（可通过 .env 文件或直接设置）
+      # 如果 .env 文件不存在，使用以下默认值
+      - XMOTOR_USE_MODBUS=${XMOTOR_USE_MODBUS:-false}
+      - XMOTOR_MODBUS_PORT=${XMOTOR_MODBUS_PORT:-COM5}
+      - XMOTOR_MODBUS_BAUDRATE=${XMOTOR_MODBUS_BAUDRATE:-38400}
+      - XMOTOR_MODBUS_SLAVE_ID=${XMOTOR_MODBUS_SLAVE_ID:-1}
+      - XMOTOR_ALLOW_ORIGINS=${XMOTOR_ALLOW_ORIGINS:-["*"]}
+      - XMOTOR_LOG_LEVEL=${XMOTOR_LOG_LEVEL:-INFO}
+      - XMOTOR_LOG_TO_CONSOLE=${XMOTOR_LOG_TO_CONSOLE:-true}
+    restart: unless-stopped
+    networks:
+      - xmotor-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health').read()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build:
+      context: ./my-ui-vite
+      dockerfile: Dockerfile
+    container_name: xmotor-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - xmotor-network
+
+networks:
+  xmotor-network:
+    driver: bridge
+

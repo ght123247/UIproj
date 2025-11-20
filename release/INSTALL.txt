@@ -1,0 +1,37 @@
+==========================================
+  XMotor Industrial OPS 安装说明
+==========================================
+
+重要提示:
+  安装脚本必须在解压后的目录中运行�?
+
+安装步骤:
+
+1. 解压此压缩包到任意目�?
+
+2. 进入解压后的目录
+   确保能看�?docker-compose.yml �?install.bat 文件
+
+3. 以管理员身份运行 install.bat
+   - 右键点击 install.bat
+   - 选择"以管理员身份运行"
+
+4. 等待安装完成（首次安装需要构�?Docker 镜像，可能需�?5-10 分钟�?
+
+5. 配置系统（可选）
+   - 编辑配置文件: %ProgramData%\XMotor-OPS\config\.env
+
+6. 启动服务
+   - 双击桌面快捷方式 "XMotor OPS"，或
+   - 运行 %ProgramFiles%\XMotor-OPS\start.bat
+
+7. 访问系统
+   - 前端界面: http://localhost
+   - 后端 API: http://localhost:8000/api/docs
+
+常见问题:
+  - 如果提示"找不到文�?，请确保在解压后的目录中运行 install.bat
+  - 如果 Docker 构建失败，请检查网络连接和 Docker 配置
+
+详细文档请查�?README.md
+
