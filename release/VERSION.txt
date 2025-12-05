@@ -1,0 +1,9 @@
+XMotor Industrial OPS
+Version: 1.0.0
+Build Date: 2025/11/17 周一 15:06:23.04
+
+Build Information:
+- Product: XMotor Industrial OPS
+- Version: 1.0.0
+- Platform: Windows
+- Build Date: 2025/11/17 周一 15:06:23.04

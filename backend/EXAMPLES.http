@@ -1,0 +1,62 @@
+### FastAPI Control Backend - Example Requests
+### Use with REST Client extension in VS Code or similar tools
+
+@baseUrl = http://127.0.0.1:8000
+@apiPrefix = /api
+
+### Health Check
+GET {{baseUrl}}{{apiPrefix}}/health
+
+### Get Latest Mock Data (generated every 2 seconds)
+GET {{baseUrl}}{{apiPrefix}}/control/latest
+
+### Send Motor Status (optional - mock data generator handles this)
+POST {{baseUrl}}{{apiPrefix}}/control/motor-status
+Content-Type: application/json
+
+{
+  "rpm": 4800,
+  "torque": 1.3,
+  "load": 72.4,
+  "temperature": 42.7
+}
+
+### Send Vibration Metrics (optional - mock data generator handles this)
+POST {{baseUrl}}{{apiPrefix}}/control/vibration-metrics
+Content-Type: application/json
+
+{
+  "main_freq": 256.0,
+  "amplitude": 0.32,
+  "rms": 0.15,
+  "impulse_count": 4
+}
+
+### Set Control Parameters - Speed Mode
+POST {{baseUrl}}{{apiPrefix}}/control/set-parameters
+Content-Type: application/json
+
+{
+  "mode": "speed",
+  "target_rpm": 5000,
+  "target_torque": null
+}
+
+### Set Control Parameters - Torque Mode
+POST {{baseUrl}}{{apiPrefix}}/control/set-parameters
+Content-Type: application/json
+
+{
+  "mode": "torque",
+  "target_rpm": null,
+  "target_torque": 1.5
+}
+
+### Set Control Parameters - Torque Mode (alternative)
+POST {{baseUrl}}{{apiPrefix}}/control/set-parameters
+Content-Type: application/json
+
+{
+  "mode": "torque",
+  "target_torque": 1.8
+}

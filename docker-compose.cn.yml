@@ -1,0 +1,57 @@
+# 使用国内镜像源的 Docker Compose 配置（备用方案）
+# 如果配置镜像加速器后仍然无法连接，可以使用此文件
+# 使用方法: docker-compose -f docker-compose.cn.yml up -d --build
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.cn  # 使用国内镜像源版本
+    container_name: xmotor-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      # 挂载日志目录（持久化日志）
+      - ./backend/logs:/app/logs
+      # 如果需要串口访问（Linux 系统）
+      # - /dev/ttyUSB0:/dev/ttyUSB0
+    environment:
+      # 数据源配置：false 使用模拟数据，true 使用 ModbusRTU
+      - XMOTOR_USE_MODBUS=false
+      # ModbusRTU 配置（如果 USE_MODBUS=true）
+      - XMOTOR_MODBUS_PORT=/dev/ttyUSB0
+      - XMOTOR_MODBUS_BAUDRATE=38400
+      - XMOTOR_MODBUS_SLAVE_ID=1
+      # CORS 配置
+      - XMOTOR_ALLOW_ORIGINS=["*"]
+      # 日志配置
+      - XMOTOR_LOG_LEVEL=INFO
+      - XMOTOR_LOG_TO_CONSOLE=true
+    restart: unless-stopped
+    networks:
+      - xmotor-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health').read()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build:
+      context: ./my-ui-vite
+      dockerfile: Dockerfile.cn  # 使用国内镜像源版本
+    container_name: xmotor-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - xmotor-network
+
+networks:
+  xmotor-network:
+    driver: bridge
+
